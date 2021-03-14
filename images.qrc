@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/images"/>
+    <qresource prefix="/">
+        <file>images/nt_for_mac.icns</file>
+    </qresource>
+</RCC>
