@@ -4,6 +4,18 @@
 
 由于在mac 上面没有发现像<网络调试助手>这样的tcp/udp开发调试工具，因此，决定用Qt写一个mac 上面的网络调试工具。支持TCP客户端，TCP服务端，UDP客户端，UDP服务端(逻辑)，UDP广播，UDP组播。
 
+MAC界面
+
+![](./images/mac.png)
+
+Windows界面
+
+
+
+Linux/ubunu界面
+
+
+
 ## 2. 部署
 
 直接拷贝network_tools.app到运行目录里面即可。
@@ -40,5 +52,13 @@ cd /Users/miaogx/my_app/Qt/5.13.2/clang_64/bin
 
 ```
 
+```
+
+
+
+github地址
+
+```
+https://github.com/miaogx22/network_tools.git
 ```
 

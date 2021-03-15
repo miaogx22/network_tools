@@ -131,6 +131,7 @@ int main_window::close_handle()
 
     if((type_index == TCP_SERVER_INDEX) && (socket_server != nullptr)){
         session_hash->clear();
+        socket_server->close_tcp_listen();
         delete  socket_server;
         socket_server = nullptr;
 
@@ -145,6 +146,7 @@ int main_window::close_handle()
 
     if((type_index == UDP_SERVER_INDEX) && (socket_server != nullptr)){
         session_hash->clear();
+        socket_server->close_udp_listen();
         delete  socket_server;
         socket_server = nullptr;
 
@@ -339,6 +341,10 @@ void main_window::count_clear_handle()
 
 void main_window::show_data_handle(nt_session *session)
 {
+    if(recv_file_str.size() > 0){
+        return;
+    }
+
     QString perfix = "from session: " + session->session_key;
 
     if(lf_flag == NT_FLAG_YES){

@@ -49,7 +49,7 @@
 #define NT_TILE_STR             "network tools(网络调试工具)"
 #define NT_VERSION_STR          "v1.0.1"
 
-#define SEND_DATA_DEFAULT       "https://gitee.com/xiaomiao22/network_tools.git"
+#define SEND_DATA_DEFAULT       "https://github.com/miaogx22/network_tools.git"
 
 #ifdef Q_OS_WIN
 

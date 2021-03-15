@@ -31,7 +31,9 @@ public:
     int create_udp_listen(QString ip, quint16 port);
     int create_multicast_listen(QString ip, quint16 port);
     void count_clear(nt_socket *tcp_socket);
-    int delete_client_socket();
+    void delete_client_socket();
+    void close_tcp_listen();
+    void close_udp_listen();
 
 signals:
     void nt_server_recv(nt_session *session);

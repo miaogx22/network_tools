@@ -6,7 +6,6 @@
 
 nt_server::nt_server()
 {
-    tcp_server = new QTcpServer;
     client_socket_list = new QList <nt_socket *>;
 
     con_count = 0;
@@ -15,12 +14,9 @@ nt_server::nt_server()
 nt_server::~nt_server()
 {   
     delete_client_socket();
-    tcp_server->close();
-
-    udp_server->close();
 }
 
-int nt_server::delete_client_socket()
+void nt_server::delete_client_socket()
 {
     //遍历socket链表，从此表中移除
     //注意，删除之后并不需要再这里删除客户端对象,关闭时会触发对象的删除操作
@@ -37,6 +33,8 @@ int nt_server::delete_client_socket()
 
 int nt_server::create_tcp_listen(QString ip, quint16 port)
 {
+     tcp_server = new QTcpServer;
+
     if(!tcp_server->listen(QHostAddress::AnyIPv4, port)){
         QString msg = tcp_server->errorString();
         emit nt_listen_failed(msg);
@@ -124,6 +122,17 @@ void nt_server::accept_connection()
     emit nt_con_count(con_count);
     emit nt_new_connected(client_socket->current_session);
 
+}
+
+
+void nt_server::close_tcp_listen()
+{
+    tcp_server->close();
+}
+
+void nt_server::close_udp_listen()
+{
+    udp_server->close();
 }
 
 

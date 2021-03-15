@@ -50,6 +50,11 @@ bool main_window::open_recv_file()
     QString msg = "open recv data file: " + recv_file_str + " successful.";
     statusBar()->showMessage(msg);
 
+    QString show_text = "recv data from: " + recv_file_str;
+    recv_browser->setText(show_text);
+    recv_browser->setReadOnly(true);
+   // recv_browser->repaint();
+
     return true;
 }
 
@@ -80,6 +85,9 @@ bool main_window::open_send_file()
         QMessageBox::warning(this, tr("警告"), "打开你选择的文件出错了.");
         return false;
     }
+
+    QString show_text = "send data from: " + send_file_str;
+    send_edit->setText(show_text);
 
     return true;
 }
@@ -115,6 +123,7 @@ int main_window::send_from_file(nt_session *session)
     }
     send_file.close();
 
+
     return 0;
 }
 
@@ -131,4 +140,9 @@ int main_window::recv_to_file(nt_session *session)
 void main_window::close_recv_file()
 {
     recv_file.close();
+    recv_file_str.clear();
+
+    recv_browser->clear();
+    send_edit->clear();
+    send_edit->setReadOnly(false);
 }
