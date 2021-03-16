@@ -103,9 +103,14 @@ int main_window::start_handle()
             break;
     }
 
-    //如果是由文件接收的话,需要在此时关闭接收文件
+    //如果是由文件接收的话,需要在此时打开接收文件
     if(recv_file_flag == NT_FLAG_YES){
         open_recv_file();
+    }
+
+    //如果是由文件发送的话,需要在此时打开发送文件
+    if(send_file_flag == NT_FLAG_YES){
+        open_send_file();
     }
 
     return ret;
@@ -114,9 +119,17 @@ int main_window::start_handle()
 
 int main_window::close_handle()
 {
+    qDebug() << "Now in close handler";
+
     //如果是由文件接收的话,需要在此时关闭接收文件
     if(recv_file_flag == NT_FLAG_YES){
         close_recv_file();
+    }
+
+    //如果是由文件发送的话,需要在此时关闭发送文件
+    if(send_file_flag == NT_FLAG_YES){
+
+        close_send_file();
     }
 
     //如果正在循环发送的话,需要停止定时器

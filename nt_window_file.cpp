@@ -35,6 +35,8 @@ bool main_window::create_recv_file()
 
 bool main_window::open_recv_file()
 {
+    qDebug() << "Now in open_recv_file";
+
     recv_file.setFileName(recv_file_str);
 
     if (!recv_file.exists()){
@@ -66,13 +68,38 @@ void main_window::file_recv_check_handle(int state)
         create_recv_file();
     } else  {
         recv_file_flag = NT_FLAG_NO;
+        recv_file_str.clear();
     }
+}
+
+/*
+ * 这里只是打开文件进行测试下
+ */
+bool main_window::get_send_file_test()
+{
+    QString default_path = QDir::homePath();
+    send_file_str = QFileDialog::getOpenFileName(this, "请选择你要发送数据的存储文件, 注意，此文件必须为文本文件", default_path);
+
+    send_file.setFileName(send_file_str);
+
+    if (!send_file.exists()){
+        QMessageBox::warning(this, tr("警告"), "你选择的文件并不存在啊.");
+        return false;
+    }
+
+    if (!send_file.open(QIODevice::ReadOnly | QIODevice::Text)){
+        QMessageBox::warning(this, tr("警告"), "打开你选择的文件出错了.");
+        return false;
+    }
+
+    send_file.close();
+
+    return true;
 }
 
 bool main_window::open_send_file()
 {
-    QString default_path = QDir::homePath();
-    send_file_str = QFileDialog::getOpenFileName(this, "请选择你要发送数据的存储文件, 注意，此文件必须为文本文件", default_path);
+    qDebug() << "Now in open_send_file";
 
     send_file.setFileName(send_file_str);
 
@@ -97,22 +124,27 @@ void main_window::file_send_check_handle(int state)
     // "选中"
     if (state == Qt::Checked) {
         send_file_flag =NT_FLAG_YES;
-        open_send_file();
+        get_send_file_test();
     } else  {
         send_file_flag = NT_FLAG_NO;
+        send_file_str.clear();
+        send_edit->clear();
     }
 }
 
 int main_window::send_from_file(nt_session *session)
 {
     //获取socket
-    nt_socket *nt_socket = session->socket;
+    nt_socket *nt_socket = session->socket;   
 
     QTextStream send_file_stream(&send_file);       //用文本流读取文件
     send_file_stream.setAutoDetectUnicode(true);    //自动检测Unicode,才能正常显示文档内的汉字
 
+    send_file_stream.seek(0);
+
     while (!send_file_stream.atEnd()){
         QString str = send_file_stream.readLine();  //读取文件的一行
+
         if((type_index == TCP_CLIENT_INDEX) && (socket_client != nullptr)){
             nt_socket->tcp_client_send(str.toUtf8());
         }
@@ -121,7 +153,7 @@ int main_window::send_from_file(nt_session *session)
             nt_socket->tcp_client_send(str.toUtf8());
         }
     }
-    send_file.close();
+
 
 
     return 0;
@@ -145,4 +177,9 @@ void main_window::close_recv_file()
     recv_browser->clear();
     send_edit->clear();
     send_edit->setReadOnly(false);
+}
+
+void main_window::close_send_file()
+{
+    send_file.close();
 }

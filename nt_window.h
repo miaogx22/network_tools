@@ -129,7 +129,6 @@ private:
 
     QString send_file_str;
     QFile send_file;
-    QTextStream send_file_stream;
 
     nt_socket *socket_client;
     nt_server *socket_server;
@@ -168,6 +167,7 @@ public:
 
     bool create_recv_file();
     void close_recv_file();
+    void close_send_file();
 
     bool open_recv_file();
     bool open_send_file();
@@ -180,6 +180,7 @@ public:
     void send_from_input(nt_session *session);
     int send_from_file(nt_session *session);
     int recv_to_file(nt_session *session);
+    bool get_send_file_test();
 
     void stop_loop_send();
 
