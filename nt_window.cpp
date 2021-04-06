@@ -117,10 +117,13 @@ int main_window::start_handle()
 }
 
 
+void main_window::set_init_status()
+{
+
+}
+
 int main_window::close_handle()
 {
-    qDebug() << "Now in close handler";
-
     //如果是由文件接收的话,需要在此时关闭接收文件
     if(recv_file_flag == NT_FLAG_YES){
         close_recv_file();
@@ -178,6 +181,9 @@ int main_window::close_handle()
         socket_server = nullptr;
     }
 
+    //设置初始状态
+    set_init_status();
+
     return 0;
 }
 
@@ -211,6 +217,8 @@ void main_window::update_status_connected(nt_session *session)
 
     session->socket = socket_client;
 
+    qDebug() << "update_status_connected session_key is:" << session->session_key;
+
     //新会话插入hash表
     session_hash->insert(session->session_key, session);
 
@@ -221,6 +229,7 @@ void main_window::update_status_connected(nt_session *session)
     //此函数只能被客户端调用, 客户端只有一个并发连接
     concurrent_print_data_label->setText("1");
 }
+
 
 void main_window::update_status_disconnected(QString session_key)
 {

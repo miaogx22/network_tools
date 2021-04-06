@@ -6,6 +6,8 @@
 
 nt_socket::nt_socket(QString pip, quint16 pport, QString lip, quint16 lport, int type)
 {
+    qDebug() << "in nts-coekt-----";
+
     current_session = new nt_session(pip, pport, lip, lport, type);
     is_my_flag = NO_MY_FLAG;
 
@@ -112,13 +114,22 @@ void nt_socket::server_client_error(QAbstractSocket::SocketError)
  */
 void nt_socket::udp_client_create()
 {
+    qDebug() << "Now in udp_client_create";
     udp_socket = new QUdpSocket;
 
     is_my_flag = IS_MY_FLAG;
 
+    //如下, 发送0字节数据，只是为了能够获取到本地端口
+    if(current_session->protocol_type == PROTOCOL_TYPE_BROADCAST){
+        udp_socket->writeDatagram(nullptr, 0, QHostAddress::Broadcast,current_session->peer_port);
+    } else if(current_session->protocol_type == PROTOCOL_TYPE_MULTICAST){
+        udp_socket->writeDatagram(nullptr, 0, QHostAddress(current_session->peer_ip_addr),current_session->peer_port);
+    } else {
+        udp_socket->writeDatagram(nullptr, 0, QHostAddress(current_session->peer_ip_addr), current_session->peer_port);
+    }
+
     current_session->status_msg = "udp create successful.";
 
-    qDebug() << "localAddreess ip:" << udp_socket->localAddress().toString();
     //创建udp client时 将本地的ip和端口作为session_key值
     QString key = udp_socket->localAddress().toString() + ":" + QString::number(udp_socket->localPort());
     current_session->session_key = key;
@@ -152,13 +163,17 @@ qint64 nt_socket::udp_client_send(QByteArray data)
 {
     qint64 ret = 0;
 
+    qDebug() << "1--------";
     if(current_session->protocol_type == PROTOCOL_TYPE_BROADCAST){
+
         ret = udp_socket->writeDatagram(data, data.size(), QHostAddress::Broadcast,current_session->peer_port);
     } else if(current_session->protocol_type == PROTOCOL_TYPE_MULTICAST){
         ret = udp_socket->writeDatagram(data, data.size(), QHostAddress(current_session->peer_ip_addr),current_session->peer_port);
     } else {
+        qDebug() << "2--------";
         ret = udp_socket->writeDatagram(data, data.size(), QHostAddress(current_session->peer_ip_addr), current_session->peer_port);
     }
+
 
     if(ret > 0){
         current_session->send_count += ret;

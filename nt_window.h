@@ -183,6 +183,7 @@ public:
     bool get_send_file_test();
 
     void stop_loop_send();
+    void set_init_status();
 
 signals:
 
