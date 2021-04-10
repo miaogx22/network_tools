@@ -69,7 +69,7 @@ int nt_server::create_udp_listen(QString ip, quint16 port)
     return 0;
 }
 
-int nt_server::create_multicast_listen(QString ip, quint16 port)
+int nt_server::create_multicast_join(QString ip, quint16 port)
 {
     udp_server = new QUdpSocket(this);
 

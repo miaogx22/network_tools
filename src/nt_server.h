@@ -29,7 +29,7 @@ public:
 
     int create_tcp_listen(QString ip, quint16 port);
     int create_udp_listen(QString ip, quint16 port);
-    int create_multicast_listen(QString ip, quint16 port);
+    int create_multicast_join(QString ip, quint16 port);
     void count_clear(nt_socket *tcp_socket);
     void delete_client_socket();
     void close_tcp_listen();

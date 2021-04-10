@@ -97,7 +97,7 @@ int main_window::start_handle()
             create_socket_client(ip_addr, port, PROTOCOL_TYPE_BROADCAST);
             break;
         case UDP_MULTICAST_INDEX:
-            ret = create_multicast_listen(ip_addr, port);
+            ret = create_multicast_join(ip_addr, port);
             break;
         default:
             break;
@@ -119,7 +119,8 @@ int main_window::start_handle()
 
 void main_window::set_init_status()
 {
-
+    peer_box->clear();
+    peer_box->repaint();
 }
 
 int main_window::close_handle()
@@ -217,7 +218,7 @@ void main_window::update_status_connected(nt_session *session)
 
     session->socket = socket_client;
 
-    qDebug() << "update_status_connected session_key is:" << session->session_key;
+    //qDebug() << "update_status_connected session_key is:" << session->session_key;
 
     //新会话插入hash表
     session_hash->insert(session->session_key, session);
@@ -230,6 +231,15 @@ void main_window::update_status_connected(nt_session *session)
     concurrent_print_data_label->setText("1");
 }
 
+void main_window::update_status_connect_error()
+{
+    statusBar()->showMessage("connect failed.");
+
+    start_button->setText("打开");
+    start_button->repaint();
+
+    set_setui_enable();
+}
 
 void main_window::update_status_disconnected(QString session_key)
 {
@@ -279,10 +289,18 @@ void main_window::current_typebox_change(int index)
         ip_label->repaint();
         break;
     case UDP_BROADCAST_INDEX:
+        if(ip_edit->text() == DEFAULT_IP){
+            ip_edit->setText(DEFAULT_BRO_IP);
+            ip_edit->repaint();
+        }
         ip_label->setText("广播地址");
         ip_label->repaint();
         break;
     case UDP_MULTICAST_INDEX:
+        if(ip_edit->text() == DEFAULT_IP){
+            ip_edit->setText(DEFAULT_MUL_IP);
+            ip_edit->repaint();
+        }
         ip_label->setText("组播地址");
         ip_label->repaint();
         break;

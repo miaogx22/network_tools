@@ -36,6 +36,10 @@
 #define NT_FLAG_ASCII          1
 #define NT_FLAG_HEX            2
 
+#define DEFAULT_IP            "192.168.1.101"
+#define DEFAULT_BRO_IP        "192.168.1.255"
+#define DEFAULT_MUL_IP        "224.0.0.88"
+#define DEFAULT_PORT          "8080"
 
 class main_window : public QMainWindow
 {
@@ -158,7 +162,7 @@ public:
 
     int create_tcp_listen(QString ip, quint16 port);
     int create_udp_listen(QString ip, quint16 port);
-    int create_multicast_listen(QString ip, quint16 port);
+    int create_multicast_join(QString ip, quint16 port);
 
     int start_handle();
     int close_handle();
@@ -190,6 +194,7 @@ signals:
 
 public slots:
     void update_status_connected(nt_session *session);
+    void update_status_connect_error();
     void update_status_disconnected(QString session_key);
     void current_typebox_change(int index);
     void current_peerbox_change(QString box_text);

@@ -18,21 +18,21 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    main.cpp \
-    nt_server.cpp \
-    nt_session.cpp \
-    nt_socket.cpp \
-    nt_window.cpp \
-    nt_window_file.cpp \
-    nt_window_layout.cpp \
-    nt_window_socket.cpp
+    src/main.cpp \
+    src/nt_server.cpp \
+    src/nt_session.cpp \
+    src/nt_socket.cpp \
+    src/nt_window.cpp \
+    src/nt_window_file.cpp \
+    src/nt_window_layout.cpp \
+    src/nt_window_socket.cpp
 
 HEADERS += \
-    nt_include.h \
-    nt_server.h \
-    nt_session.h \
-    nt_socket.h \
-    nt_window.h
+    src/nt_include.h \
+    src/nt_server.h \
+    src/nt_session.h \
+    src/nt_socket.h \
+    src/nt_window.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

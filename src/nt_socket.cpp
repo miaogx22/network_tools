@@ -103,8 +103,7 @@ void nt_socket::count_clear()
 
 void nt_socket::server_client_error(QAbstractSocket::SocketError)
 {
-   // qDebug() << "Now in server_client_error";
-
+    emit nt_connect_error();
 }
 
 /*
@@ -112,7 +111,6 @@ void nt_socket::server_client_error(QAbstractSocket::SocketError)
  */
 void nt_socket::udp_client_create()
 {
-    qDebug() << "Now in udp_client_create";
     udp_socket = new QUdpSocket;
 
     is_my_flag = IS_MY_FLAG;
@@ -144,6 +142,9 @@ void nt_socket::udp_broadcast_create()
 
     is_my_flag = IS_MY_FLAG;
 
+    //如下, 发送0字节数据，只是为了能够获取到本地端口
+    udp_socket->writeDatagram(nullptr, 0, QHostAddress::Broadcast,current_session->peer_port);
+
     current_session->status_msg = "udp broadcast create successful.";
 
     //创建udp client时 将本地的ip和端口作为session_key值
@@ -161,14 +162,12 @@ qint64 nt_socket::udp_client_send(QByteArray data)
 {
     qint64 ret = 0;
 
-    qDebug() << "1--------";
     if(current_session->protocol_type == PROTOCOL_TYPE_BROADCAST){
 
         ret = udp_socket->writeDatagram(data, data.size(), QHostAddress::Broadcast,current_session->peer_port);
     } else if(current_session->protocol_type == PROTOCOL_TYPE_MULTICAST){
         ret = udp_socket->writeDatagram(data, data.size(), QHostAddress(current_session->peer_ip_addr),current_session->peer_port);
     } else {
-        qDebug() << "2--------";
         ret = udp_socket->writeDatagram(data, data.size(), QHostAddress(current_session->peer_ip_addr), current_session->peer_port);
     }
 
@@ -208,9 +207,9 @@ void nt_socket::udp_read_data()
 void nt_socket::udp_socket_error(QAbstractSocket::SocketError)
 {
     qDebug()<<udp_socket->errorString();
-
     udp_socket->close();
 
+    emit nt_connect_error();
 }
 
 void nt_socket::udp_close_socket()

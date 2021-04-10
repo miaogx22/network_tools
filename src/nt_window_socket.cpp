@@ -11,6 +11,7 @@ void main_window::create_socket_client(QString ip, quint16 port, int type)
 
     connect(socket_client, SIGNAL(nt_udp_successful(nt_session *)), this, SLOT(update_status_connected(nt_session *)));
     connect(socket_client, SIGNAL(nt_successful(nt_session *)), this, SLOT(update_status_connected(nt_session *)));
+    connect(socket_client, SIGNAL(nt_connect_error()), this, SLOT(update_status_connect_error()));
     connect(socket_client, SIGNAL(nt_disconnected(QString)), this, SLOT(update_status_disconnected(QString)));
     connect(socket_client, SIGNAL(nt_recv(nt_session *)), this, SLOT(show_data_handle(nt_session *)));
 
@@ -96,7 +97,7 @@ int main_window::create_udp_listen(QString ip, quint16 port)
     return (socket_server->create_udp_listen(ip, port));
 }
 
-int main_window::create_multicast_listen(QString ip, quint16 port)
+int main_window::create_multicast_join(QString ip, quint16 port)
 {
     socket_server = new nt_server();
 
@@ -109,5 +110,5 @@ int main_window::create_multicast_listen(QString ip, quint16 port)
 
     connect(socket_server, SIGNAL(nt_con_count(int)), this, SLOT(update_count_con(int)));
 
-    return (socket_server->create_multicast_listen(ip, port));
+    return (socket_server->create_multicast_join(ip, port));
 }

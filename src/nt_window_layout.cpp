@@ -52,11 +52,11 @@ QGroupBox *main_window::create_set_net_group()
 
     ip_label = new QLabel("ip 地址", this);
     ip_edit = new QLineEdit;
-    ip_edit->setText("192.168.1.101");          //设置个默认IP
+    ip_edit->setText(DEFAULT_IP);          //设置个默认IP
 
     port_label = new QLabel("端口号", this);
     port_edit = new QLineEdit;
-    port_edit->setText("8080");             //设置个默认端口号
+    port_edit->setText(DEFAULT_PORT);             //设置个默认端口号
     start_button = new QPushButton("打开");
 
     set_net_layout->addWidget(type_label);
