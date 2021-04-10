@@ -97,7 +97,7 @@ int main_window::start_handle()
             create_socket_client(ip_addr, port, PROTOCOL_TYPE_BROADCAST);
             break;
         case UDP_MULTICAST_INDEX:
-            ret = create_multicast_join(ip_addr, port);
+            create_socket_client(ip_addr, port, PROTOCOL_TYPE_MULTICAST);
             break;
         default:
             break;
@@ -177,9 +177,10 @@ int main_window::close_handle()
     }
 
     if((type_index == UDP_MULTICAST_INDEX) && (socket_server != nullptr)){
-        session_hash->clear();
-        delete  socket_server;
-        socket_server = nullptr;
+        socket_client->udp_close_socket();
+
+        delete  socket_client;
+        socket_client = nullptr;
     }
 
     //设置初始状态
@@ -218,8 +219,6 @@ void main_window::update_status_connected(nt_session *session)
 
     session->socket = socket_client;
 
-    //qDebug() << "update_status_connected session_key is:" << session->session_key;
-
     //新会话插入hash表
     session_hash->insert(session->session_key, session);
 
@@ -231,9 +230,19 @@ void main_window::update_status_connected(nt_session *session)
     concurrent_print_data_label->setText("1");
 }
 
-void main_window::update_status_connect_error()
+void main_window::update_status_connect_error(QString msg)
 {
-    statusBar()->showMessage("connect failed.");
+    statusBar()->showMessage(msg);
+
+    start_button->setText("打开");
+    start_button->repaint();
+
+    set_setui_enable();
+}
+
+void main_window::update_status_join_error(QString msg)
+{
+    statusBar()->showMessage(msg);
 
     start_button->setText("打开");
     start_button->repaint();
@@ -449,7 +458,7 @@ void main_window::send_from_input(nt_session *session)
         return;
     }
 
-    if((type_index == UDP_MULTICAST_INDEX) && (socket_server != nullptr)){
+    if((type_index == UDP_MULTICAST_INDEX) && (socket_client != nullptr)){
         nt_socket->udp_client_send(arry_text);
         return;
     }
@@ -457,6 +466,8 @@ void main_window::send_from_input(nt_session *session)
 
 void main_window::emit_loop_send()
 {
+    clear_send_button->setEnabled(false);                 //循环发送过程中不让清空数据
+
     if(record_for_loop != nullptr){
         send_from_input(record_for_loop);
     }
@@ -465,7 +476,7 @@ void main_window::emit_loop_send()
 void main_window::stop_loop_send()
 {
     loop_timer->stop();
-
+    clear_send_button->setEnabled(true);
     send_button->setText("发送");
     send_button->repaint();
 }

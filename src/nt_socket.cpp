@@ -103,7 +103,8 @@ void nt_socket::count_clear()
 
 void nt_socket::server_client_error(QAbstractSocket::SocketError)
 {
-    emit nt_connect_error();
+    QString msg = tcp_socket->errorString();
+    emit nt_connect_error(msg);
 }
 
 /*
@@ -157,13 +158,49 @@ void nt_socket::udp_broadcast_create()
     connect(udp_socket,SIGNAL(error(QAbstractSocket::SocketError)),this, SLOT(udp_socket_error(QAbstractSocket::SocketError)));
 }
 
+void nt_socket::udp_multicast_create()
+{
+    udp_socket = new QUdpSocket;
+
+    is_my_flag = IS_MY_FLAG;
+
+    if(!udp_socket->bind(QHostAddress::AnyIPv4, current_session->peer_port, QUdpSocket::ShareAddress)){
+        QString msg = udp_socket->errorString();
+        emit nt_join_error(msg);
+        return;
+    }
+
+    bool result = udp_socket->joinMulticastGroup(QHostAddress(current_session->peer_ip_addr));
+    if(!result){
+        QString msg = udp_socket->errorString();
+        emit nt_join_error(msg);
+        return;
+    }
+
+    //如下, 发送0字节数据，只是为了能够获取到本地端口
+   udp_socket->writeDatagram(nullptr, 0, QHostAddress(current_session->peer_ip_addr),current_session->peer_port);
+
+   current_session->status_msg = "udp multicast join successful.";
+
+   //创建udp client时 将本地的ip和端口作为session_key值
+   QString key = udp_socket->localAddress().toString() + ":" + QString::number(udp_socket->localPort());
+   current_session->session_key = key;
+
+    //设置接收缓冲区大小
+    //udp_socket->setSocketOption(QAbstractSocket::ReceiveBufferSizeSocketOption,1024*1024*8);
+
+    emit nt_udp_successful(current_session);
+
+    connect(udp_socket, SIGNAL(readyRead()), this, SLOT(udp_read_data()));
+    connect(udp_socket,SIGNAL(error(QAbstractSocket::SocketError)),this, SLOT(udp_socket_error(QAbstractSocket::SocketError)));
+}
+
 
 qint64 nt_socket::udp_client_send(QByteArray data)
 {
     qint64 ret = 0;
 
     if(current_session->protocol_type == PROTOCOL_TYPE_BROADCAST){
-
         ret = udp_socket->writeDatagram(data, data.size(), QHostAddress::Broadcast,current_session->peer_port);
     } else if(current_session->protocol_type == PROTOCOL_TYPE_MULTICAST){
         ret = udp_socket->writeDatagram(data, data.size(), QHostAddress(current_session->peer_ip_addr),current_session->peer_port);
@@ -206,10 +243,10 @@ void nt_socket::udp_read_data()
 
 void nt_socket::udp_socket_error(QAbstractSocket::SocketError)
 {
-    qDebug()<<udp_socket->errorString();
+    QString msg = udp_socket->errorString();
     udp_socket->close();
 
-    emit nt_connect_error();
+    emit nt_connect_error(msg);
 }
 
 void nt_socket::udp_close_socket()

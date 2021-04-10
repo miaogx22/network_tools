@@ -194,7 +194,8 @@ signals:
 
 public slots:
     void update_status_connected(nt_session *session);
-    void update_status_connect_error();
+    void update_status_connect_error(QString);
+    void update_status_join_error(QString);
     void update_status_disconnected(QString session_key);
     void current_typebox_change(int index);
     void current_peerbox_change(QString box_text);

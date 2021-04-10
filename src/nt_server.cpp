@@ -69,32 +69,6 @@ int nt_server::create_udp_listen(QString ip, quint16 port)
     return 0;
 }
 
-int nt_server::create_multicast_join(QString ip, quint16 port)
-{
-    udp_server = new QUdpSocket(this);
-
-    if(!udp_server->bind(QHostAddress::AnyIPv4, port, QUdpSocket::ShareAddress)){
-        QString msg = udp_server->errorString();
-        emit nt_listen_failed(msg);
-        return -1;
-    }
-
-    bool result = udp_server->joinMulticastGroup(QHostAddress(ip));
-
-    if(!result){
-        QString msg = udp_server->errorString();
-        emit nt_listen_failed(msg);
-        return -1;
-    }
-
-    QString success = "join " + ip + ":" + QString::number(port) + "successful";
-    emit nt_listen_successful(success);
-
-    connect(udp_server, SIGNAL(readyRead()), this, SLOT(udp_server_read()));
-
-    return 0;
-}
-
 void nt_server::accept_connection()
 {
     nt_socket *client_socket = new nt_socket(nullptr, 0, nullptr, 0, PROTOCOL_TYPE_TCP);

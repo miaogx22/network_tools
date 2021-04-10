@@ -48,7 +48,8 @@ public:
 signals:
     void nt_recv(nt_session *session);
 
-    void nt_connect_error();
+    void nt_connect_error(QString);
+    void nt_join_error(QString);
     void nt_successful(nt_session *session);
     void nt_disconnected(QString session_key);
 
