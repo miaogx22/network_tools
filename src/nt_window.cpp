@@ -23,7 +23,7 @@ main_window::main_window(QWidget *parent)
 
     QString title = QString::fromUtf8(NT_TILE_STR) +  QString::fromUtf8(NT_VERSION_STR);
     setWindowTitle(title);
-    this->resize( QSize(600,600));
+    this->resize(QSize(580,580));
 
     record_for_loop = nullptr;
     loop_timer = new QTimer(this);
@@ -466,9 +466,8 @@ void main_window::send_from_input(nt_session *session)
 
 void main_window::emit_loop_send()
 {
-    clear_send_button->setEnabled(false);                 //循环发送过程中不让清空数据
-
     if(record_for_loop != nullptr){
+        clear_send_button->setEnabled(false);                 //循环发送过程中不让清空数据
         send_from_input(record_for_loop);
     }
 }

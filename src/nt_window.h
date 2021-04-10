@@ -140,6 +140,7 @@ private:
     //存储TCP socket 的hash
     QHash<QString, nt_session *> *session_hash;
 
+    QFont font_set;
 public:
     main_window(QWidget *parent = nullptr);
     ~main_window();

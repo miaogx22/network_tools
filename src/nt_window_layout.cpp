@@ -12,6 +12,8 @@ void main_window::create_main_layout()
     set_layout = new QVBoxLayout;
     data_layout = new QVBoxLayout;
 
+    font_set.setBold(true);
+
     set_layout->addWidget(create_set_net_group());
     set_layout->addWidget(create_set_recv_group());
     set_layout->addWidget(create_set_send_group());
@@ -20,7 +22,7 @@ void main_window::create_main_layout()
     data_layout->addWidget(create_data_send_group());
     data_layout->addWidget(create_data_count_group());
 
-    data_layout->setStretchFactor(data_recv_group, 4);
+    data_layout->setStretchFactor(data_recv_group, 3);
     data_layout->setStretchFactor(data_send_group, 1);
 
     main_layout->addLayout(set_layout);
@@ -40,7 +42,8 @@ void main_window::create_main_layout()
 QGroupBox *main_window::create_set_net_group()
 {
     set_net_group = new QGroupBox("基础信息");
-
+    //font_set.setPointSize(20);
+    //set_net_group->setT
     set_net_layout = new QVBoxLayout;
 
     type_label = new QLabel("协议类型", this);
@@ -102,6 +105,7 @@ QGroupBox *main_window::create_set_recv_group()
 
     set_recv_layout->addLayout(ah_layout);
     set_recv_layout->addWidget(lf_check);
+    set_recv_layout->setSpacing(0);
     set_recv_layout->addWidget(file_recv_check);
     set_recv_layout->addWidget(clear_recv_button);
 
@@ -165,9 +169,7 @@ QGroupBox *main_window::create_data_recv_group()
     recv_browser = new QTextBrowser();
 
     data_recv_layout->addWidget(recv_browser);
-
     data_recv_group->setLayout(data_recv_layout);
-
 
     return data_recv_group;
 }
@@ -191,7 +193,7 @@ QGroupBox *main_window::create_data_send_group()
 
     data_send_layout->addWidget(send_edit);
     data_send_layout->addLayout(start_layout);
-    data_send_layout->setStretchFactor(send_edit, 1);
+    data_send_layout->setStretchFactor(send_edit, 2);
     data_send_layout->setStretchFactor(start_layout, 1);
 
     data_send_group->setLayout(data_send_layout);
@@ -221,7 +223,7 @@ QGroupBox *main_window::create_data_count_group()
     count_layout->addWidget(recv_print_data_label);
     count_layout->addWidget(send_print_label);
     count_layout->addWidget(send_print_data_label);
-
+    //count_layout->setSpacing(1);
 
     data_count_group->setLayout(count_layout);
 

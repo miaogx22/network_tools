@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 
     //实则默认体大小
     QFont font;
-    font.setPointSize(12);
+    font.setPointSize(10);
     a.setFont(font);
 
     main_window w;
