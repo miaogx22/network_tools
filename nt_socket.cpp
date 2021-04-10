@@ -6,8 +6,6 @@
 
 nt_socket::nt_socket(QString pip, quint16 pport, QString lip, quint16 lport, int type)
 {
-    qDebug() << "in nts-coekt-----";
-
     current_session = new nt_session(pip, pport, lip, lport, type);
     is_my_flag = NO_MY_FLAG;
 
