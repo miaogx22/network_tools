@@ -24,7 +24,19 @@
 #include <QtNetwork/QTcpServer>
 #include <QtNetwork/QUdpSocket>
 #include <QHostAddress>
+
+#ifdef Q_OS_WIN
+#include <windows.h>
+//#pragma comment(lib, "wsock32.lib")
+#endif
+
+#ifdef Q_OS_LINUX
 #include <arpa/inet.h>
+#endif
+
+#ifdef Q_OS_MAC
+#include <arpa/inet.h>
+#endif
 
 #include <QHash>
 #include <QList>

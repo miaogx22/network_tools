@@ -34,8 +34,8 @@ void main_window::create_main_layout()
     widget->setLayout(main_layout);
     this->setCentralWidget(widget);
 
-    //setWindowIcon(QIcon(":/images/nt_for_mac.icns"));
-    setWindowIcon(QIcon("qrc:/images/nt_for_mac.icns"));
+    //setWindowIcon(QIcon(":/images/nt_for_win.ico"));
+    //setWindowIcon(QIcon("qrc:/images/nt_for_mac.icns"));
 }
 
 

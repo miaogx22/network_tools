@@ -2,5 +2,6 @@
     <qresource prefix="/images"/>
     <qresource prefix="/">
         <file>images/nt_for_mac.icns</file>
+        <file>images/nt_for_win.ico</file>
     </qresource>
 </RCC>
